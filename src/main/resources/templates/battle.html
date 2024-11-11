@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Битва</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="content">
+    <ul th:object="${main_hero}">
+        <li><p>Имя: <span th:text="*{name}"></span></p></li>
+        <li><p>Здоровье: <span th:text="*{health}"></span></p></li>
+        <li><p>Урон: <span th:text="*{weapon.damage}"></span></p></li>
+        <li><p>Класс: <span th:text="*{personClass}"></span></p></li>
+        <li><p>Раса: <span th:text="*{rasa}"></span></p></li>
+        <li><p>Деньги: <span th:text="*{money}"></span></p></li>
+        <li><p>Броня: <span th:text="*{armor.defense}"></span></p></li>
+    </ul>
+
+    <h1 th:text="${text}"></h1>
+    <ul th:object="${enemies}">
+        <li><p>Вы втретили врага: <span th:text="*{name}"></span></p></li>
+        <li><p>Здоровье: <span th:text="*{health}"></span></p></li>
+        <li><p>Урон: <span th:text="*{damage}"></span></p></li>
+    </ul>
+    <form th:action="@{/human_game/attack}" method="post">
+        <button type="submit">Атаковать</button>
+    </form>
+
+    <form th:action="@{/human_game/battle/usePotion}" method="get">
+        <button type="submit">Использовать зелье (50 монет)</button>
+    </form>
+
+    <form th:action="@{/human_game/human}" method="get">
+        <button type="submit">Сбежать с битвы</button>
+    </form>
+</div>
+</body>
+</html>

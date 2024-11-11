@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>game-over</title>
+</head>
+<body>
+    <p>Вы проиграли хотите начать заново?</p>
+    <form th:action="@{/set-name-form}" method="get">
+        <button type="submit">Начать заново</button>
+    </form>
+</body>
+</html>

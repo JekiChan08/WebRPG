@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Set Name</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="form-container">
+    <h1>Введите имя персонажа</h1>
+    <form th:action="@{/set_name_form}" th:object="${new_main_hero}" method="post">
+        <input type="text" th:field="*{name}" placeholder="Имя персонажа" required><br/>
+
+        <label for="personClass">Выберите класс героя:</label>
+        <select th:field="*{personClass}" id="personClass" required>
+            <option value="mag">Маг</option>
+            <option value="physical">Воин</option>
+        </select><br/>
+
+        <label for="rasa">Выберите расу героя:</label>
+        <select th:field="*{rasa}" id="rasa" required>
+            <option value="human">Человек</option>
+            <option value="elf">Эльф</option>
+            <option value="orc">Орк</option>
+            <option value="dwarf">Гном</option>
+            <option value="magical_best">Маг-зверь</option>
+        </select><br/>
+
+        <input type="submit" value="Сохранить">
+    </form>
+</div>
+</body>
+</html>
