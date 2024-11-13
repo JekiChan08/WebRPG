@@ -93,6 +93,25 @@ public class HumanGameController {
         return beginning(session, model);
     }
 
+    @PostMapping("/battle/usePotion")
+    public String usePotionInBattle(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
+
+        if (gameService.usePotion(mainHero)) {
+            model.addAttribute("text", "Вы использовали зелье");
+        } else {
+            model.addAttribute("text", "Не достаточно денег");
+        }
+
+        if (mainHero.isEndGame()) {
+            return "redirect:/game-over";
+        }
+        return "redirect:/battle";
+    }
+
+
     @PostMapping("/upgradeWeapon")
     public String upgradeWeapon(HttpSession session, Model model) {
         String heroId = (String) session.getAttribute("hero_id");
