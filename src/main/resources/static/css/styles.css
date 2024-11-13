@@ -1,4 +1,4 @@
-/* Общие стили */
+
 * {
     margin: 0;
     padding: 0;
@@ -11,22 +11,21 @@ body {
     color: #ddd;
     line-height: 1.6;
     display: flex;
-    justify-content: center; /* Центрирование по горизонтали */
-    align-items: center; /* Центрирование по вертикали */
-    height: 100vh; /* Высота равная 100% от экрана */
-    margin: 0; /* Убираем стандартные отступы */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
 .container {
-    width: 90%; /* Контейнер занимает 90% ширины экрана */
-    max-width: 1200px; /* Максимальная ширина контейнера */
+    width: 90%;
+    max-width: 1200px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between; /* Пространство между сайдбаром и основным контентом */
-    gap: 20px; /* Промежуток между колонками */
+    justify-content: space-between;
+    gap: 20px;
 }
 
-/* Сайдбар с характеристиками */
 .stats-sidebar {
     background-color: #333;
     padding: 20px;
@@ -52,7 +51,6 @@ body {
     color: #ffcc00;
 }
 
-/* Основной контент */
 .main-content {
     background-color: #444;
     padding: 20px;
@@ -91,7 +89,6 @@ button:hover {
     background-color: #e6b800;
 }
 
-/* Формы */
 form {
     display: flex;
     flex-direction: column;
@@ -131,7 +128,6 @@ input[type="submit"]:hover {
     background-color: #e6b800;
 }
 
-/* Статистика персонажа */
 .stats-sidebar {
     font-size: 16px;
     font-weight: 400;
@@ -143,7 +139,6 @@ input[type="submit"]:hover {
     gap: 15px;
 }
 
-/* Стили для различных состояний */
 h1, .main-content h1 {
     font-size: 28px;
     margin-bottom: 20px;
