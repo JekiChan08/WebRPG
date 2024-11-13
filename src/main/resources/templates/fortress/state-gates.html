@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Статы ворот</title>
+</head>
+<body>
+<div class="container">
+
+    <tr th:each="gate : ${fortress.gates}">
+        <td><p>Статы <span th:text="${gate.name}"></span>:</p></td>
+        <td><p>Здоровье: <span th:text="${gate.health}"></span></p></td>
+        <td><p>Защита: <span th:text="${gate.protection}"></span>%</p></td>
+    </tr>
+
+    <form th:action="@{/dwarf_game/preparation}" method="get">
+        <input type="submit" value="Назад">
+    </form>
+</div>
+</body>
+</html>

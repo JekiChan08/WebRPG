@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор ворот</title>
+</head>
+<body>
+<table class="gate">
+    <tr th:each="gate : ${fortress.gates}">
+        <td><p>Враги <span th:text="${gate.name}"> </span>:</p></td>
+        <td><p>Здоровье ворот: <span th:text="${gate.health}"></span></p></td>
+        <td><p>Защита ворот: <span th:text="${gate.protection}"></span>%</p></td>
+
+        <td>
+            <p>Позиции врагов:</p>
+            <ul>
+                <li th:each="enemy, index : ${gate.steps}">
+                    <span th:if="${enemy != null}">
+                        Враг <span th:text="${enemy.name}"></span> на расстоянии
+                        <span th:text="${(index + 1) * 1}"> км</span>
+                    </span>
+                    <span th:if="${enemy == null}">Свободная позиция на расстоянии <span th:text="${(index + 1) * 1}"> км</span></span>
+                </li>
+            </ul>
+        </td>
+    </tr>
+</table>
+<h1>Вы выбрали гномов теперь выберете ворота</h1>
+<div class="container">
+    <tr th:each="gate : ${fortress.gates}">
+        <td><p>Статы <span th:text="${gate.name}"></span>:</p></td>
+        <td><p>Здоровье: <span th:text="${gate.health}"></span></p></td>
+        <td><p>Защита: <span th:text="${gate.protection}"></span>%</p></td>
+        <td>
+            <form th:action="@{/dwarf_game/select_gate_in_defense/{id}(id=${gate.id})}" method="post">
+                <button type="submit">Выбрать</button>
+            </form>
+        </td>
+    </tr>
+
+    <form th:action="@{/dwarf_game/fortress_defense}" method="get">
+        <input type="submit" value="Назад">
+    </form>
+</div>
+</body>
+</html>

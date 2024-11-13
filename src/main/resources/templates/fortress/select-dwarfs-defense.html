@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор на защиту крепости</title>
+</head>
+<body>
+
+<div class="container" th:if="${fortress.dwarfGroups.getId != null}">
+<tr th:each="dwarf : ${fortress.dwarfGroups}">
+    <td><p>Группа номер: <span th:text="${iterStat.index + 1}"></span></p></td>
+    <td><p>Здоровье: <span th:text="${dwarf.health}"></span></p></td>
+    <td><p>Урон: <span th:text="${dwarf.damage}"></span></p></td>
+    <td><p>Защита: <span th:text="${dwarf.protection}"></span></p></td>
+    <td><p>Уровень: <span th:text="${dwarf.level}"></span></p></td>
+    <td>
+        <form th:action="@{/dwarf_game/fortress_defense/{id}(id=${dwarf.id})}" method="post">
+            <button type="submit">Выбрать</button>
+        </form>
+    </td>
+</tr>
+</div>
+<div th:if="${fortress.dwarfGroups.getId == null}"><h1>Не осталось гномов</h1></div>
+
+<form th:action="@{/dwarf_game/fortress_defense}" method="get">
+    <input type="submit" value="Назад">
+</form>
+
+</body>
+</html>

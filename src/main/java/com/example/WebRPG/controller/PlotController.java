@@ -46,7 +46,7 @@ public class PlotController {
             case "magical_best":
                 return "redirect:/magical_best_game/magical_best";
             case "dwarf":
-                return "redirect:/game/dwarf";
+                return "redirect:/dwarf_game/set_stats";
             default:
                 return "redirect:/human";
         }
