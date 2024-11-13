@@ -21,19 +21,19 @@
     </ul>
     <h1 th:text="${text}"></h1>
     <div class="content">
-      <form th:action="@{/human_game/battle}" method="get">
+      <form th:action="@{/elf_game/battle}" method="get">
         <button type="submit">Начать битву</button>
       </form>
 
-      <form th:action="@{/human_game/upgradeWeapon}" method="post">
+      <form th:action="@{/elf_game/upgradeWeapon}" method="post">
         <button type="submit">Улучшить оружие (75 монет)</button>
       </form>
 
-      <form th:action="@{/human_game/upgradeArmor}" method="post">
+      <form th:action="@{/elf_game/upgradeArmor}" method="post">
         <button type="submit">Улучшить защиту (100 монет) +5%</button>
       </form>
 
-      <form th:action="@{/human_game/usePotion}" method="post">
+      <form th:action="@{/elf_game/usePotion}" method="post">
         <button type="submit">Использовать зелье (50 монет) +50</button>
       </form>
 

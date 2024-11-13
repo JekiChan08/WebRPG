@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Битва с Боссом</title>
+    <title>Битва</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <div class="app">
-    <div class="app__view" style="background: no-repeat center/cover url('/img/locations/dungeon.jpg')">
+    <div class="app__view" style="background: no-repeat center/cover url('/img/locations/forest.jpg')">
         <div class="app__left-img">
-            <img src="/img/heroes/human.png" alt="">
+            <img src="/img/heroes/elf.png" alt="">
         </div>
         <div class="app__right-img">
-            <img th:src="@{'/img/boss/' + ${boss.name} + '.png'}"/>
+            <img th:src="@{'/img/enemies/' + ${enemies.name} + '.png'}"/>
         </div>
     </div>
     <div class="app__content">
@@ -29,20 +29,20 @@
             </ul>
         </div>
         <div class="main-content">
-            <h1>Битва с боссом</h1>
-            <ul th:object="${boss}">
-                <li><p>Босс: <span th:text="*{name}"></span></p></li>
+            <h1 th:text="${text}"></h1>
+            <ul th:object="${enemies}">
+                <li><p>Враг: <span th:text="*{name}"></span></p></li>
                 <li><p>Здоровье: <span th:text="*{health}"></span></p></li>
                 <li><p>Урон: <span th:text="*{damage}"></span></p></li>
             </ul>
-            <form th:action="@{/human_game/attack_boss}" method="post">
-                <button type="submit">Атаковать Босса</button>
+            <form th:action="@{/elf_game/attack}" method="post">
+                <button type="submit">Атаковать</button>
             </form>
-            <form th:action="@{/human_game/use_potion_in_boss_battle}" method="post">
+            <form th:action="@{/elf_game/use_potion_in_battle}" method="post">
                 <button type="submit">Использовать зелье (50 монет) 50+</button>
             </form>
-            <form th:action="@{/human_game/human}" method="get">
-                <button type="submit">Сбежать от Босса</button>
+            <form th:action="@{/elf_game/human}" method="get">
+                <button type="submit">Сбежать с битвы</button>
             </form>
         </div>
     </div>

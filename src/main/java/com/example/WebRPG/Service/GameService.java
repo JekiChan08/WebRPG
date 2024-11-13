@@ -8,6 +8,8 @@ public interface GameService {
     void attack(MainHero mainHero, Enemies enemies);
     void setEnd(MainHero mainHero);
     Enemies rnEnemies(int level);
+    Enemies elfEnemies(int level);
+    Enemies orcEnemies(int level);
     public Boss rnBoss(int level);
     public void attackBoss(MainHero mainHero, Boss boss);
     boolean upgradeWeapon(MainHero mainHero);
