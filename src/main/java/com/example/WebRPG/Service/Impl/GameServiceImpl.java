@@ -1,37 +1,45 @@
 package com.example.WebRPG.Service.Impl;
 
-import com.example.WebRPG.Model.Characters.Person.Enemies;
-import com.example.WebRPG.Model.Characters.Person.EnumEnemies;
-import com.example.WebRPG.Model.Characters.Person.MainHero;
+import com.example.WebRPG.Model.Characters.Person.*;
 import com.example.WebRPG.Repositories.ArmorRepository;
 import com.example.WebRPG.Repositories.MainHeroRepository;
 import com.example.WebRPG.Repositories.WeaponRepository;
 import com.example.WebRPG.Service.GameService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 @Data
 public class GameServiceImpl implements GameService{
+    @Autowired
     private final WeaponRepository weaponRepository;
+    @Autowired
     private MainHeroRepository mainHeroRepository;
-
+    @Autowired
     private final ArmorRepository armorRepository;
     @Override
     public void attack(MainHero mainHero, Enemies enemies) {
-        double damage = mainHero.getLevel() * enemies.getDamage() * (1 - mainHero.getArmor().getDefense() / 100.0);
+        double damageToHero = calculateDamageToHero(enemies.getDamage(), mainHero.getArmor().getDefense());
         enemies.setHealth(enemies.getHealth() - mainHero.getDamage());
-        if (enemies.getHealth() > 0) {
-            mainHero.setHealth(mainHero.getHealth() - damage);
 
+        if (enemies.getHealth() > 0) {
+            mainHero.setHealth(mainHero.getHealth() - damageToHero);
         }
+
         setEnd(mainHero);
     }
+
+    private double calculateDamageToHero(double enemyDamage, double heroDefense) {
+        return enemyDamage * (1 - heroDefense / 100.0);
+    }
+
     @Override
     public void setEnd(MainHero mainHero) {
         if (mainHero.getHealth() <= 0) {
@@ -39,21 +47,38 @@ public class GameServiceImpl implements GameService{
             mainHeroRepository.save(mainHero);
         }
     }
+
     @Override
-    public Enemies rnEnemies() {
-        ArrayList<EnumEnemies> enumEnemies = new ArrayList<>();
-        enumEnemies.add(EnumEnemies.SKELETON);
-        enumEnemies.add(EnumEnemies.SPIDER);
-        enumEnemies.add(EnumEnemies.GOBLIN);
-        enumEnemies.add(EnumEnemies.GIANT);
-        enumEnemies.add(EnumEnemies.VAMPIRE);
-        enumEnemies.add(EnumEnemies.ZOMBIE);
-        enumEnemies.add(EnumEnemies.BASILISK);
-        enumEnemies.add(EnumEnemies.COBALT);
-        enumEnemies.add(EnumEnemies.CYCLOPS);
+    public Enemies rnEnemies(int level) {
+        List<EnumEnemies> enumEnemies = Arrays.asList(EnumEnemies.values());
         Random rn = new Random();
-        return new Enemies(enumEnemies.get(rn.nextInt(enumEnemies.size())));
+        Enemies enemies = new Enemies(enumEnemies.get(rn.nextInt(enumEnemies.size())));
+        enemies.setDamage(enemies.getDamage() * level);
+        enemies.setHealth(45 + (level * 10));
+        return enemies;
     }
+
+    @Override
+    public void attackBoss(MainHero mainHero, Boss boss) {
+        double damageToHero = calculateDamageToHero(boss.getDamage(), mainHero.getArmor().getDefense());
+        boss.setHealth(boss.getHealth() - mainHero.getDamage());
+
+        if (boss.getHealth() > 0) {
+            mainHero.setHealth(mainHero.getHealth() - damageToHero);
+        }
+
+        setEnd(mainHero);
+    }
+
+    @Override
+    public Boss rnBoss(int level) {
+        List<EnumBoss> enumBosses = Arrays.asList(EnumBoss.values());
+        Random rn = new Random();
+        EnumBoss selectedBoss = enumBosses.get(rn.nextInt(enumBosses.size()));
+        return new Boss(selectedBoss);
+    }
+
+
     @Override
     public boolean upgradeWeapon(MainHero mainHero) {
         if (mainHero.getMoney() >= 75) {

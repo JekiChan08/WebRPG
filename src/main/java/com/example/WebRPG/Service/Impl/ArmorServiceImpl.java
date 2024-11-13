@@ -6,12 +6,15 @@ import com.example.WebRPG.Repositories.ArmorRepository;
 import com.example.WebRPG.Service.ArmorService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Data
 public class ArmorServiceImpl implements ArmorService {
+    @Autowired
+
     private final ArmorRepository repository;
 
     @Override

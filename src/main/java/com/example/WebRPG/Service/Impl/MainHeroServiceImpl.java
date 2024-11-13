@@ -9,6 +9,7 @@ import com.example.WebRPG.Service.MainHeroService;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +19,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Data
 public class MainHeroServiceImpl implements MainHeroService {
+    @Autowired
     private final MainHeroRepository mr;
+    @Autowired
     private final ArmorRepository ar;
+    @Autowired
     private final WeaponRepository wr;
 
 

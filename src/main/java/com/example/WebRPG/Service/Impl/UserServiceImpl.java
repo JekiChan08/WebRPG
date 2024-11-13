@@ -5,6 +5,7 @@ import com.example.WebRPG.Repositories.UserRepository;
 import com.example.WebRPG.Service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Data
 public class UserServiceImpl implements UserService {
+    @Autowired
     private final UserRepository userRepository;
     @Override
     public User findById(String id) {
