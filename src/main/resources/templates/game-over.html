@@ -2,12 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>game-over</title>
+    <title>Концовка</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <p>Вы проиграли хотите начать заново?</p>
-    <form th:action="@{/set-name-form}" method="get">
-        <button type="submit">Начать заново</button>
-    </form>
+<div class="container">
+    <div class="main-content">
+        <div th:if="${main_hero.health > 0}">
+            <h1 th:text="${end}"></h1>
+        </div>
+        <div th:if="${main_hero.health <= 0}">
+            <h1>Вы проиграли, хотите начать заново?</h1>
+        </div>
+        <form th:action="@{/set_name_form}" method="get">
+            <button type="submit">Начать заново</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

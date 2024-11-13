@@ -31,7 +31,7 @@ public class Weapon {
     private static final double UPGRADE_MULTIPLIER = 1.5;
 
     public Weapon() {
-        this.damage = 10;
+        this.damage = 1000;
         this.price = 75;
         this.typeDamage = "mag";
     }

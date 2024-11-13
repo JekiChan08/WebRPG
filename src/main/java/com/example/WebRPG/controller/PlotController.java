@@ -20,7 +20,11 @@ public class PlotController {
     private final MainHeroService ms;
 
     @GetMapping("/set_name_form")
-    public String setName(Model model) {
+    public String setName(Model model, HttpSession session) {
+        session.removeAttribute("hero_id");
+        session.removeAttribute("enemies");
+        session.removeAttribute("boss");
+        session.removeAttribute("main_hero");
         model.addAttribute("new_main_hero", new MainHero());
         return "set-name-form";
     }
@@ -46,6 +50,11 @@ public class PlotController {
             default:
                 return "redirect:/human";
         }
+    }
+
+    @GetMapping("/")
+    public String home(Model model) {
+        return "redirect:/set_name_form";
     }
 
 

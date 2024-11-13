@@ -1,5 +1,6 @@
 package com.example.WebRPG.controller;
 
+import com.example.WebRPG.Model.Characters.Person.Boss;
 import com.example.WebRPG.Model.Characters.Person.Enemies;
 import com.example.WebRPG.Model.Characters.Person.MainHero;
 import com.example.WebRPG.Service.ArmorService;
@@ -15,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("human_game")
+@RequestMapping("/human_game")
 public class HumanGameController {
     private final GameService gameService;
     private final MainHeroService ms;
     private final ArmorService as;
+    private final String end = "Поздравляю вас с победой над главным злодеем этого мира весь мир благодарна вам за то что вы смогли защитить их земли и семьи. Ваша победа навсегда останется в истории как спаситель всего мира.";
 
     @GetMapping("/human")
     public String beginning(HttpSession session, Model model) {
@@ -27,7 +29,7 @@ public class HumanGameController {
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
         if (mainHero.isEndGame()) {
-            return "redirect:/game-over";
+            return "redirect:/human_game/game_over";
         }
         return "human";
     }
@@ -39,17 +41,20 @@ public class HumanGameController {
         model.addAttribute("main_hero", mainHero);
 
         if (session.getAttribute("enemies") == null) {
-            Enemies rnEnemies = gameService.rnEnemies();
+            Enemies rnEnemies = gameService.rnEnemies(mainHero.getLevel());
             session.setAttribute("enemies", rnEnemies);
             model.addAttribute("enemies", rnEnemies);
         } else {
             model.addAttribute("enemies", session.getAttribute("enemies"));
         }
 
-        if (!mainHero.isEndGame()) {
+        model.addAttribute("main_hero", mainHero);
+        if (mainHero.getLevel() >= 10) {
+            return "redirect:/human_game/boss_battle";
+        }else if (!mainHero.isEndGame()) {
             return "battle";
         }
-        return "game-over";
+        return "redirect:/human_game/game_over";
     }
 
     @PostMapping("/attack")
@@ -65,12 +70,12 @@ public class HumanGameController {
             mainHero.setLevel(mainHero.getLevel() + 1);
             ms.saveMainHero(mainHero);
 
-            Enemies rnEnemies = gameService.rnEnemies();
+            Enemies rnEnemies = gameService.rnEnemies(mainHero.getLevel());
             session.setAttribute("enemies", rnEnemies);
         }
 
         if (mainHero.isEndGame()) {
-            return "redirect:/game-over";
+            return "redirect:/human_game/game_over";
         }
         return "redirect:/human_game/battle";
     }
@@ -88,12 +93,12 @@ public class HumanGameController {
         }
 
         if (mainHero.isEndGame()) {
-            return "redirect:/game-over";
+            return "redirect:/human_game/game_over";
         }
         return beginning(session, model);
     }
 
-    @PostMapping("/battle/usePotion")
+    @PostMapping("/use_potion_in_battle")
     public String usePotionInBattle(HttpSession session, Model model) {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
@@ -106,9 +111,26 @@ public class HumanGameController {
         }
 
         if (mainHero.isEndGame()) {
-            return "redirect:/game-over";
+            return "redirect:/human_game/game_over";
         }
-        return "redirect:/battle";
+        return "redirect:/human_game/battle";
+    }
+    @PostMapping("/use_potion_in_boss_battle")
+    public String usePotionInBossBattle(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
+
+        if (gameService.usePotion(mainHero)) {
+            model.addAttribute("text", "Вы использовали зелье");
+        } else {
+            model.addAttribute("text", "Не достаточно денег");
+        }
+
+        if (mainHero.isEndGame()) {
+            return "redirect:/human_game/game_over";
+        }
+        return "redirect:/human_game/boss_battle";
     }
 
 
@@ -125,7 +147,7 @@ public class HumanGameController {
         }
 
         if (mainHero.isEndGame()) {
-            return "redirect:/game-over";
+            return "redirect:/human_game/game_over";
         }
         return beginning(session, model);
     }
@@ -147,8 +169,58 @@ public class HumanGameController {
         model.addAttribute("main_hero", mainHero);
 
         if (mainHero.isEndGame()) {
-            return "redirect:/game-over";
+            return "redirect:/human_game/game_over";
         }
         return beginning(session, model);
+    }
+    @GetMapping("/boss_battle")
+    public String battleBoss(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
+
+        if (session.getAttribute("boss") == null) {
+            Boss boss = gameService.rnBoss(mainHero.getLevel());
+            session.setAttribute("boss", boss);
+            model.addAttribute("boss", boss);
+        } else {
+            model.addAttribute("boss", session.getAttribute("boss"));
+        }
+
+        if (!mainHero.isEndGame()) {
+            return "boss-battle";
+        }
+        return "redirect:/human_game/game_over";
+    }
+    @PostMapping("/attack_boss")
+    public String attackBoss(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        Boss boss = (Boss) session.getAttribute("boss");
+
+        gameService.attackBoss(mainHero, boss);
+        ms.saveMainHero(mainHero);
+        session.setAttribute("boss", boss);
+        if (boss.getHealth() <= 0) {
+            model.addAttribute("end", end);
+            return "redirect:/human_game/game_over";
+        }
+
+        if (mainHero.isEndGame()) {
+            return "redirect:/human_game/game_over";
+        }
+
+        return "redirect:/human_game/boss_battle";
+    }
+
+
+    @GetMapping("/game_over")
+    public String gameOver(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
+        model.addAttribute("boss", session.getAttribute("boss"));
+        model.addAttribute("end", end);
+        return "game-over";
     }
 }

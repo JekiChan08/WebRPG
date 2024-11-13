@@ -9,17 +9,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public enum EnumEnemies {
-    GOBLIN(1, "Гоблин", 50, 10, 100),
-    SKELETON(1, "Скелет", 50, 10, 100),
-    ZOMBIE(1, "Зомби", 50, 10, 100),
-    COBALT(1, "Кобальт", 50, 10, 100),
-    VAMPIRE(1, "Вампир", 50, 10, 100),
-    BASILISK(1, "Василиск", 50, 10, 100),
-    GIANT(1, "Гигант", 50, 10, 100),
-    SPIDER(1, "Паук", 50, 10, 100),
-    CYCLOPS(1, "Циклоп", 50, 10, 100);
+    GOBLIN( "Гоблин", 50, 10, 100),
+    SKELETON( "Скелет", 50, 10, 100),
+    ZOMBIE("Зомби", 50, 10, 100),
+    COBALT( "Кобальт", 50, 10, 100),
+    VAMPIRE( "Вампир", 50, 10, 100),
+    BASILISK( "Василиск", 50, 10, 100),
+    GIANT( "Гигант", 50, 10, 100),
+    SPIDER( "Паук", 50, 10, 100),
+    CYCLOPS( "Циклоп", 50, 10, 100);
 
-    private double protection;
     private String name;
     private double health;
     private double damage;

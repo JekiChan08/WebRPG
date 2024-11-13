@@ -49,7 +49,7 @@ public class MainHero {
 
     public MainHero() {
         this.health = 100;
-        this.money = 100;
+        this.money = 150;
         this.armor = new Armor(20);
         this.endGame = false;
         this.level = 1;
