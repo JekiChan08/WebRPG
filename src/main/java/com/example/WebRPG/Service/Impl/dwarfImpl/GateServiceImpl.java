@@ -4,24 +4,20 @@ import com.example.WebRPG.Model.Characters.Dwarf.DwarfGroup;
 import com.example.WebRPG.Model.Characters.Dwarf.Gate;
 import com.example.WebRPG.Repositories.dwarfRepositories.GateRepository;
 import com.example.WebRPG.Service.dwarf.GateService;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-@Data
 public class GateServiceImpl implements GateService {
-    @Autowired
-    private final GateRepository gateRepository;
 
+    @Autowired
+    private GateRepository gateRepository;
     @Override
     public Gate findById(String id) {
         return gateRepository.findById(id).orElse(null);
     }
-
     @Override
     public Gate saveGateGroup(Gate gate) {
         return gateRepository.save(gate);
@@ -32,14 +28,10 @@ public class GateServiceImpl implements GateService {
         gateRepository.deleteById(id);
     }
 
-    //Добавь уже этого долбанного гнома
     @Override
     public boolean addInDwarf(DwarfGroup dwarfGroup, Gate gate) {
-        if (gate.getDwarf() != null) {
-            gate.setDwarf(dwarfGroup);
-            return true;
-        }else {
-            return false;
-        }
+        return false;
     }
+
+
 }

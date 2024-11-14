@@ -4,7 +4,7 @@ package com.example.WebRPG.controller;
 import com.example.WebRPG.Model.Characters.Dwarf.DwarfGroup;
 import com.example.WebRPG.Model.Characters.Dwarf.Fortress;
 import com.example.WebRPG.Model.Characters.Dwarf.Gate;
-import com.example.WebRPG.Model.Characters.Dwarf.enemies.EnemiesGroup;
+import com.example.WebRPG.Service.Impl.dwarfImpl.GameDwarfServiceImpl;
 import com.example.WebRPG.Service.MainHeroService;
 import com.example.WebRPG.Service.dwarf.DwarfGroupService;
 import com.example.WebRPG.Service.dwarf.FortressService;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -182,56 +181,29 @@ public class DwarfGameController {
 
     @GetMapping("/fortress_defense")
     public String fortressDefense(HttpSession session, Model model) {
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        model.addAttribute("fortress", fortress);
-        gameDwarfService.fortressDefense(fortress);
-
-        return "fortress/fortress-defense";
+        return "fortress/select-gate-in-defense";
     }
 
 
     @PostMapping("/fortress_defense/{id}")
     public String fortressDefense(@PathVariable("id") String id, HttpSession session, Model model) {
-        DwarfGroup dwarf = dwarfGroupService.findById(id);
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-
-        model.addAttribute("fortress", fortress);
-        session.setAttribute("dwarf", dwarf);
 
         return "redirect:/dwarf_game/select_gate_in_defense";
     }
 
     @GetMapping("/select_gate_in_defense")
     public String selectGateInDefense(HttpSession session, Model model) {
-        DwarfGroup dwarf = (DwarfGroup) session.getAttribute("dwarf");
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-
-        model.addAttribute("fortress", fortress);
-
         return "fortress/select-gate-in-defense";
     }
 
 
     @GetMapping("/select_dwarfs_defense")
     public String selectDwarfsDefense(HttpSession session, Model model) {
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        model.addAttribute("fortress", fortress);
-
         return "fortress/select-dwarfs-defense";
     }
 
     @PostMapping("/select_gate_in_defense/{id}")
     public String selectGateInDefense(@PathVariable("id") String id, HttpSession session, Model model) {
-        Gate gate = gateService.findById(id);
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        model.addAttribute("fortress", fortress);
-
-
 
         return "redirect:/dwarf_game/fortress_defense";
     }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Турнир</title>
+</head>
+<body>
+<div class="content">
+    <tr th:each="mag : ${mag}">
+        <td><p>Название карты: <span th:text="${mag.title}"></span>:</p></td>
+        <td><p>Урон: <span th:text="${mag.damage}"></span></p></td>
+        <td><p>мана: <span th:text="${mag.mana}"></span>%</p></td>
+        <form th:action="@{/magical_best_game/start/{id}(id=${mag.id})}" method="post">
+            <button type="submit">Ударить</button>
+        </form>
+    </tr>
+    <form th:action="@{/magical_best_game/skeap}" method="post">
+        <button type="submit">пропустить</button>
+    </form>
+</div>
+</body>
+</html>

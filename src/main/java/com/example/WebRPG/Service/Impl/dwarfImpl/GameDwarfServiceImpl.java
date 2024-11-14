@@ -16,30 +16,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-@Service
 @RequiredArgsConstructor
 @Data
-
+@Service
 public class GameDwarfServiceImpl implements GameDwarfService {
 
     @Autowired
     private final FortressRepository fortressRepository;
     @Autowired
-    private GateRepository gateRepository;
+    private final GateRepository gateRepository;
     @Autowired
     private final DwarfGroupRepository dwarfGroupRepository;
 
-    private Random random = new Random();
-    private ArrayList<EnemiesGroup> enemies = new ArrayList<>();
-    private ArrayList<DwarfGroup> reserve = new ArrayList<>();
+    private final ArrayList<EnemiesGroup> enemies = new ArrayList<>();
 
     public GameDwarfServiceImpl() {
         fortressRepository = getFortressRepository();
         dwarfGroupRepository = getDwarfGroupRepository();
-        enemies = new ArrayList<>();
-        reserve = new ArrayList<>();
+        gateRepository = getGateRepository();
         enemies.add(new EnemiesGroup(GroupEnemies.VAMPIRE));
         enemies.add(new EnemiesGroup(GroupEnemies.GOBLIN));
         enemies.add(new EnemiesGroup(GroupEnemies.SKELETON));
@@ -52,6 +47,53 @@ public class GameDwarfServiceImpl implements GameDwarfService {
 
     @Override
     public void fortressDefense(Fortress fortress) {
+        for (Gate gate : fortress.getGates()) {
+            if (fortress.getDays() % 7 == 0) {
+                enemies.forEach(enemy -> enemy.damageUp(fortress.getDays() / 7)); // Усиление монстров каждую неделю
+            }
 
+            if (gate.getSteps().size() > 0) {
+                EnemiesGroup enemy = gate.getSteps().get(0);
+
+                DwarfGroup defendingDwarf = gate.getDwarf();
+                if (defendingDwarf != null && defendingDwarf.getHealth() > 0) {
+                    enemy.setHealth(enemy.getHealth() - defendingDwarf.getDamage());
+                    defendingDwarf.setHealth(defendingDwarf.getHealth() - Math.max(0, enemy.getDamage() - defendingDwarf.getProtection()));
+
+                    if (defendingDwarf.getHealth() <= 0) {
+                        gate.setDwarf(null);
+                    }
+                } else {
+                    gate.setHealth(gate.getHealth() - enemy.getDamage());
+
+                    if (gate.getHealth() <= 0) {
+                        gate.setProtection(0);
+                    }
+                }
+
+                if (enemy.getHealth() <= 0) {
+                    gate.getSteps().remove(0);
+                    fortress.setBalance(fortress.getBalance() + enemy.getCoin());
+                }
+            }
+
+            if (gate.getHealth() <= 0 && !gate.getSteps().isEmpty()) {
+                EnemiesGroup enemy = gate.getSteps().get(0);
+                fortress.setHealth(fortress.getHealth() - enemy.getDamage());
+
+                if (fortress.getHealth() <= 0) {
+                    endGame(fortress);
+                    return;
+                }
+            }
+        }
+
+        fortress.setDays(fortress.getDays() + 1);
+        fortressRepository.save(fortress);
+    }
+
+    private void endGame(Fortress fortress) {
+        fortress.setHealth(0);
+        fortressRepository.save(fortress);
     }
 }

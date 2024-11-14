@@ -54,7 +54,7 @@ public class Gate {
     }
 
     public boolean addEnemiesToStep(EnemiesGroup group) {
-        if (steps.size() < 2) {
+        if (steps.size() < 3) {
             steps.add(group);
             group.setGate(this);
             return true;

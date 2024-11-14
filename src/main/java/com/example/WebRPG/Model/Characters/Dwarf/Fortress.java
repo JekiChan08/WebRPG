@@ -37,7 +37,7 @@ public class Fortress {
     private int days;
 
     @OneToMany(mappedBy = "fortress", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Gate> gates = new ArrayList<>();  // Связь с Gate
+    private List<Gate> gates = new ArrayList<>();
 
 
     public Fortress() {

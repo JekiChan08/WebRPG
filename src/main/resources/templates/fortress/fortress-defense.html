@@ -1,41 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru">
 <head>
-    <title>Fortress Defense</title>
+    <meta charset="UTF-8">
+    <title>Защита крепости</title>
 </head>
 <body>
-<h1>Защита Крепости</h1>
-
-<p>Волна: <span th:text="${wave}"></span></p>
-<p>Здоровье крепости: <span th:text="${fortress.health}"></span></p>
-<p>Провизия: <span th:text="${fortress.provision}"></span></p>
-
-<table>
-    <tr>
-        <th>Ворота</th>
-        <th>Здоровье</th>
-        <th>Защита</th>
-        <th>Враги</th>
-    </tr>
-    <tr th:each="gate : ${fortress.gates}">
-        <td th:text="${gate.name}"></td>
-        <td th:text="${gate.health}"></td>
-        <td th:text="${gate.protection}"></td>
-        <td>
-            <span th:each="enemy, iterStat : ${gate.steps}">
-                <span th:text="${enemy != null ? enemy.name : 'Свободно'}"></span>
-                <span th:text="${iterStat.index + 1} + ' км от крепости'"></span><br/>
-            </span>
-        </td>
-    </tr>
-</table>
-
-<form th:action="@{/fortress/defense/action}" method="post">
-    <label>Выберите действие:</label><br>
-    <button type="submit" name="action" value="1">Отправить гномов на защиту ворот</button>
-    <button type="submit" name="action" value="2">Убрать гномов с ворот</button>
-    <button type="submit" name="action" value="3">Пропустить ход</button>
-</form>
 
 </body>
 </html>

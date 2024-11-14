@@ -43,8 +43,8 @@ public class EnemiesGroup {
     }
 
 
-    public void damageUp(int day) {
-        setHealth(getHealth() * day);
-        setDamage(getDamage() * day);
+    public void damageUp(int multiplier) {
+        setHealth(getHealth() * multiplier);
+        setDamage(getDamage() * multiplier);
     }
 }
