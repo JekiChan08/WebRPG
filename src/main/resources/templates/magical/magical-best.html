@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Маг-зверь</title>
+</head>
+<body>
+<h1>Каждые 100 лет у маг-зверей проходит битва чемпионов, где победитель становится полубогом, правящим небесным царством. Главный герой тренировался последние 90 лет, и вот настало время биться. Битва проходит в концепте карточных ролевых игр, где ты выбираешь, каким способностями бить врага. Всего в битве вы должны победить 10 раз.</h1>
+<div class="container">
+    <div class="main-content">
+        <form th:action="@{/magical_best_game/start}" th:object="${new_magical_best}" method="post" class="form-container">
+            <input type="text" th:field="*{name}" placeholder="Как вас буду тназывать в турнире?" required><br/>
+            <input type="submit" value="Погнали!">
+        </form>
+    </div>
+</div>
+</body>
+</html>

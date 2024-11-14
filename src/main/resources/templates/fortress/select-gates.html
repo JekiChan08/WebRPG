@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор ворот на улучшение</title>
+</head>
+<body>
+<div class="container">
+
+    <tr th:each="gate : ${fortress.gates}">
+        <td><p>Статы <span th:text="${gate.name}"></span>:</p></td>
+        <td><p>Здоровье: <span th:text="${gate.health}"></span></p></td>
+        <td><p>Защита: <span th:text="${gate.protection}"></span>%</p></td>
+        <td>
+            <form th:action="@{/dwarf_game/upgrade_gates/{id}(id=${gate.id})}" method="post">
+                <button type="submit">Улучшить</button>
+            </form>
+        </td>
+    </tr>
+
+    <form th:action="@{/dwarf_game/preparation}" method="get">
+        <input type="submit" value="Назад">
+    </form>
+</div>
+</body>
+</html>

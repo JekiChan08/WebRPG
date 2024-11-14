@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор для улучшения группы гномов</title>
+</head>
+<body>
+
+    <tr th:each="dwarf, iterStat : ${dwarfGroups}">
+        <td><p>Группа номер: <span th:text="${iterStat.index + 1}"></span></p></td>
+        <td><p>Здоровье: <span th:text="${dwarf.health}"></span></p></td>
+        <td><p>Урон: <span th:text="${dwarf.damage}"></span></p></td>
+        <td><p>Защита: <span th:text="${dwarf.protection}"></span></p></td>
+        <td><p>Уровень: <span th:text="${dwarf.level}"></span></p></td>
+        <td>
+            <form th:action="@{/dwarf_game/update_level_dwarf/{id}(id=${dwarf.id})}" method="post">
+                <button type="submit">Улучшить</button>
+            </form>
+        </td>
+    </tr>
+
+</table>
+<form th:action="@{/dwarf_game/preparation}" method="get">
+    <input type="submit" value="Назад">
+</form>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Подготовка</title>
+</head>
+<body>
+
+<ul th:object="${fortress}">
+    <li><p>Название крепости: <span th:text="*{name}"></span></p></li>
+    <li><p>Здоровье: <span th:text="*{health}"></span></p></li>
+    <li><p>Баланс: <span th:text="*{balance}"></span></p></li>
+    <li><p>Провизия на день: <span th:text="*{provision}"></span></p></li>
+    <li><p>Очки: <span th:text="*{experience}"></span></p></li>
+    <li><p>День: <span th:text="*{days}"></span></p></li>
+</ul>
+<h1 th:text="${text}"></h1>
+<div class="content">
+    <form th:action="@{/dwarf_game/fortress_defense}" method="get">
+        <button type="submit">Начать защиту крепости</button>
+    </form>
+    <form th:action="@{/dwarf_game/select_dwarf}" method="get">
+        <button type="submit">улучшить группу гномов (Стоит 1 опыта)</button>
+    </form>
+
+    <form th:action="@{/dwarf_game/dwarfs_stats}" method="get">
+        <button type="submit">Проверить состояния гномов</button>
+    </form>
+
+    <form th:action="@{/dwarf_game/state_gates}" method="get">
+        <button type="submit">Проверить состояние ворот</button>
+    </form>
+
+    <form th:action="@{/dwarf_game/buying_Dwarfs}" method="post">
+        <button type="submit">Купить группу гномов у соседа (50 монет)</button>
+    </form>
+    <form th:action="@{/dwarf_game/buy_provision}" method="post">
+        <button type="submit">Купить провизии (на день - 100 монет)</button>
+    </form>
+    <form th:action="@{/dwarf_game/select_gates}" method="get">
+        <button type="submit">Улучшить ворота (100 монет, +20% защиты, макс 80%)</button>
+    </form>
+    <form th:action="@{/dwarf_game/exist}" method="post">
+        <button type="submit">выйти из игры</button>
+    </form>
+
+</div>
+</body>
+</html>
