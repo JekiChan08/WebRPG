@@ -7,9 +7,9 @@
 </head>
 <body>
 <div class="app">
-    <div class="app__view" style="background: no-repeat center/cover url('/img/locations/dungeon.jpg')">
+    <div class="app__view" style="background: no-repeat bottom/cover url('/img/locations/wasteland.jpg')">
         <div class="app__left-img">
-            <img src="/img/heroes/human.png" alt="">
+            <img src="/img/heroes/orc.png" alt="">
         </div>
         <div class="app__right-img">
             <img th:src="@{'/img/boss/' + ${boss.name} + '.png'}"/>
@@ -35,13 +35,13 @@
                 <li><p>Здоровье: <span th:text="*{health}"></span></p></li>
                 <li><p>Урон: <span th:text="*{damage}"></span></p></li>
             </ul>
-            <form th:action="@{/human_game/attack_boss}" method="post">
+            <form th:action="@{/orc_game/attack_boss}" method="post">
                 <button type="submit">Атаковать Босса</button>
             </form>
-            <form th:action="@{/human_game/use_potion_in_boss_battle}" method="post">
+            <form th:action="@{/orc_game/use_potion_in_boss_battle}" method="post">
                 <button type="submit">Использовать зелье (50 монет) 50+</button>
             </form>
-            <form th:action="@{/human_game/human}" method="get">
+            <form th:action="@{/orc_game/human}" method="get">
                 <button type="submit">Сбежать от Босса</button>
             </form>
         </div>

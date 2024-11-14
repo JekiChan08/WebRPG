@@ -6,17 +6,19 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<div class="container">
-    <div class="main-content">
-        <div th:if="${main_hero.health > 0}">
-            <h1 th:text="${end}"></h1>
+<div class="app">
+    <div class="app__content">
+        <div class="main-content">
+            <div th:if="${main_hero.health > 0}">
+                <h1 th:text="${end}"></h1>
+            </div>
+            <div th:if="${main_hero.health <= 0}">
+                <h1>Вы проиграли, хотите начать заново?</h1>
+            </div>
+            <form th:action="@{/set_name_form}" method="get">
+                <button type="submit">Начать заново</button>
+            </form>
         </div>
-        <div th:if="${main_hero.health <= 0}">
-            <h1>Вы проиграли, хотите начать заново?</h1>
-        </div>
-        <form th:action="@{/set_name_form}" method="get">
-            <button type="submit">Начать заново</button>
-        </form>
     </div>
 </div>
 </body>

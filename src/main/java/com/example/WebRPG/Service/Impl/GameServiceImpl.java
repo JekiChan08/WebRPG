@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -56,6 +57,32 @@ public class GameServiceImpl implements GameService{
         enemies.setDamage(enemies.getDamage() * level);
         enemies.setHealth(45 + (level * 10));
         return enemies;
+    }
+
+    @Override
+    public Enemies elfEnemies(int level) {
+        List<EnumEnemies> enumEnemies = new ArrayList<>();
+        enumEnemies.add(EnumEnemies.SPYSPIRIT);
+        enumEnemies.add(EnumEnemies.SPIDER);
+        enumEnemies.add(EnumEnemies.DRAUGLIN);
+        enumEnemies.add(EnumEnemies.DRAUGLIN);
+        Enemies currentEnemies = new Enemies(enumEnemies.get(level - 1));
+        currentEnemies.setDamage(currentEnemies.getDamage() * level);
+        currentEnemies.setHealth(45 + (level * 10));
+        return currentEnemies;
+    }
+
+    @Override
+    public Enemies orcEnemies(int level) {
+        List<EnumEnemies> enumEnemies = new ArrayList<>();
+        enumEnemies.add(EnumEnemies.PERSON);
+        enumEnemies.add(EnumEnemies.ORC);
+        enumEnemies.add(EnumEnemies.DWARF);
+        enumEnemies.add(EnumEnemies.DWARF);
+        Enemies currentEnemies = new Enemies(enumEnemies.get(level - 1));
+        currentEnemies.setDamage(currentEnemies.getDamage() * level);
+        currentEnemies.setHealth(45 + (level * 10));
+        return currentEnemies;
     }
 
     @Override
