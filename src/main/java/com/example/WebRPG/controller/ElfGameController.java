@@ -28,6 +28,9 @@ public class ElfGameController {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
+        model.addAttribute("end", end);
+
+
         if (mainHero.isEndGame()) {
             return "redirect:/elf_game/game_over";
         }
@@ -47,6 +50,7 @@ public class ElfGameController {
         } else {
             model.addAttribute("enemies", session.getAttribute("enemies"));
         }
+        model.addAttribute("end", end);
 
         model.addAttribute("main_hero", mainHero);
         if (mainHero.getLevel() >= 4) {
@@ -62,6 +66,7 @@ public class ElfGameController {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
         Enemies enemies = (Enemies) session.getAttribute("enemies");
+        model.addAttribute("end", end);
 
         gameService.attack(mainHero, enemies);
         ms.saveMainHero(mainHero);
@@ -73,6 +78,7 @@ public class ElfGameController {
             Enemies rnEnemies = gameService.elfEnemies(mainHero.getLevel());
             session.setAttribute("enemies", rnEnemies);
         }
+        model.addAttribute("end", end);
 
         if (mainHero.isEndGame()) {
             return "redirect:/elf_game/game_over";
@@ -91,6 +97,7 @@ public class ElfGameController {
         } else {
             model.addAttribute("text", "Не достаточно денег");
         }
+        model.addAttribute("end", end);
 
         if (mainHero.isEndGame()) {
             return "redirect:/elf_game/game_over";
@@ -109,6 +116,7 @@ public class ElfGameController {
         } else {
             model.addAttribute("text", "Не достаточно денег");
         }
+        model.addAttribute("end", end);
 
         if (mainHero.isEndGame()) {
             return "redirect:/elf_game/game_over";
@@ -126,6 +134,7 @@ public class ElfGameController {
         } else {
             model.addAttribute("text", "Не достаточно денег");
         }
+        model.addAttribute("end", end);
 
         if (mainHero.isEndGame()) {
             return "redirect:/elf_game/game_over";
@@ -139,6 +148,7 @@ public class ElfGameController {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
+        model.addAttribute("end", end);
 
         if (gameService.upgradeWeapon(mainHero)) {
             model.addAttribute("text", "Вы успешно улучшили оружие");
@@ -156,6 +166,7 @@ public class ElfGameController {
     public String upgradeArmor(HttpSession session, Model model) {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("end", end);
 
         if (mainHero.getMoney() >= 100) {
             model.addAttribute("text", "Вы улучшили броню!");
@@ -178,6 +189,7 @@ public class ElfGameController {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
+        model.addAttribute("end", end);
 
         if (session.getAttribute("boss") == null) {
             Boss boss = gameService.rnBoss(mainHero.getLevel());
@@ -201,6 +213,8 @@ public class ElfGameController {
         gameService.attackBoss(mainHero, boss);
         ms.saveMainHero(mainHero);
         session.setAttribute("boss", boss);
+        model.addAttribute("end", end);
+
         if (boss.getHealth() <= 0) {
             model.addAttribute("end", end);
             return "redirect:/elf_game/game_over";

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Статы персонажа</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="app">
+  <div class="app__content">
+
+    <ul th:object="${main_hero}">
+      <li><p>Имя: <span th:text="*{name}"></span></p></li>
+      <li><p>Здоровье: <span th:text="*{health}"></span></p></li>
+      <li><p>Урон: <span th:text="*{weapon.damage}"></span></p></li>
+      <li><p>Класс: <span th:text="*{personClass}"></span></p></li>
+      <li><p>Раса: <span th:text="*{rasa}"></span></p></li>
+      <li><p>Деньги: <span th:text="*{money}"></span></p></li>
+      <li><p>Уровень: <span th:text="*{level}"></span></p></li>
+      <li><p>Броня: <span th:text="*{armor.defense}"></span>% поглощение урона</p></li>
+    </ul>
+    <h1 th:text="${text}"></h1>
+    <div class="content">
+      <form th:action="@{/magical_best_game/battle}" method="get">
+        <button type="submit">Начать битву</button>
+      </form>
+
+      <form th:action="@{/magical_best_game/upgradeWeapon}" method="post">
+        <button type="submit">Улучшить оружие (75 монет)</button>
+      </form>
+
+      <form th:action="@{/magical_best_game/upgradeArmor}" method="post">
+        <button type="submit">Улучшить защиту (100 монет) +5%</button>
+      </form>
+
+      <form th:action="@{/magical_best_game/usePotion}" method="post">
+        <button type="submit">Использовать зелье (50 монет) +50</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

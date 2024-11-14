@@ -60,6 +60,25 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
+    public Enemies dwarfEnemies(int level) {
+        List<EnumEnemies> enumEnemies = Arrays.asList(EnumEnemies.values());
+        Random rn = new Random();
+        Enemies enemies = new Enemies(enumEnemies.get(rn.nextInt(enumEnemies.size())));
+        enemies.setDamage(enemies.getDamage() * level);
+        enemies.setHealth(45 + (level * 10));
+        return enemies;
+    }
+    @Override
+    public Enemies magicalBestEnemies(int level) {
+        List<EnumEnemies> enumEnemies = Arrays.asList(EnumEnemies.values());
+        Random rn = new Random();
+        Enemies enemies = new Enemies(enumEnemies.get(rn.nextInt(enumEnemies.size())));
+        enemies.setDamage(enemies.getDamage() * level);
+        enemies.setHealth(45 + (level * 10));
+        return enemies;
+    }
+
+    @Override
     public Enemies elfEnemies(int level) {
         List<EnumEnemies> enumEnemies = new ArrayList<>();
         enumEnemies.add(EnumEnemies.SPYSPIRIT);

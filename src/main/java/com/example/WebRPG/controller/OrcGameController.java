@@ -28,6 +28,8 @@ public class OrcGameController {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
+        model.addAttribute("end", end);
+
         if (mainHero.isEndGame()) {
             return "redirect:/orc_game/game_over";
         }
@@ -39,6 +41,8 @@ public class OrcGameController {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
+
+        model.addAttribute("end", end);
 
         if (session.getAttribute("enemies") == null) {
             Enemies rnEnemies = gameService.orcEnemies(mainHero.getLevel());
@@ -65,6 +69,8 @@ public class OrcGameController {
         MainHero mainHero = ms.findById(heroId);
         Enemies enemies = (Enemies) session.getAttribute("enemies");
 
+        model.addAttribute("end", end);
+
         gameService.attack(mainHero, enemies);
         ms.saveMainHero(mainHero);
         if (enemies.getHealth() <= 0) {
@@ -88,6 +94,8 @@ public class OrcGameController {
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
 
+        model.addAttribute("end", end);
+
         if (gameService.usePotion(mainHero)) {
             model.addAttribute("text", "Вы использовали зелье");
         } else {
@@ -106,6 +114,8 @@ public class OrcGameController {
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
 
+        model.addAttribute("end", end);
+
         if (gameService.usePotion(mainHero)) {
             model.addAttribute("text", "Вы использовали зелье");
         } else {
@@ -122,6 +132,8 @@ public class OrcGameController {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
+
+        model.addAttribute("end", end);
 
         if (gameService.usePotion(mainHero)) {
             model.addAttribute("text", "Вы использовали зелье");
@@ -142,6 +154,8 @@ public class OrcGameController {
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
 
+        model.addAttribute("end", end);
+
         if (gameService.upgradeWeapon(mainHero)) {
             model.addAttribute("text", "Вы успешно улучшили оружие");
         } else {
@@ -158,6 +172,8 @@ public class OrcGameController {
     public String upgradeArmor(HttpSession session, Model model) {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
+
+        model.addAttribute("end", end);
 
         if (mainHero.getMoney() >= 100) {
             model.addAttribute("text", "Вы улучшили броню!");
@@ -181,6 +197,8 @@ public class OrcGameController {
         MainHero mainHero = ms.findById(heroId);
         model.addAttribute("main_hero", mainHero);
 
+        model.addAttribute("end", end);
+
         if (session.getAttribute("boss") == null) {
             Boss boss = gameService.rnBoss(mainHero.getLevel());
             session.setAttribute("boss", boss);
@@ -199,6 +217,8 @@ public class OrcGameController {
         String heroId = (String) session.getAttribute("hero_id");
         MainHero mainHero = ms.findById(heroId);
         Boss boss = (Boss) session.getAttribute("boss");
+
+        model.addAttribute("end", end);
 
         gameService.attackBoss(mainHero, boss);
         ms.saveMainHero(mainHero);

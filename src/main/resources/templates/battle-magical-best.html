@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Битва</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="app">
+  <div class="app__view" style="background: no-repeat bottom/cover url('/img/locations/battle arena.jpg')">
+    <div class="app__left-img">
+      <img src="/img/heroes/beast-mage.png" alt="">
+    </div>
+    <div class="app__right-img">
+      <img th:src="@{'/img/enemies/' + ${enemies.name} + '.png'}"/>
+    </div>
+  </div>
+  <div class="app__content">
+    <div class="stats-sidebar">
+      <ul th:object="${main_hero}">
+        <li><p>Имя: <span th:text="*{name}"></span></p></li>
+        <li><p>Здоровье: <span th:text="*{health}"></span></p></li>
+        <li><p>Урон: <span th:text="*{weapon.damage}"></span></p></li>
+        <li><p>Класс: <span th:text="*{personClass}"></span></p></li>
+        <li><p>Раса: <span th:text="*{rasa}"></span></p></li>
+        <li><p>Деньги: <span th:text="*{money}"></span></p></li>
+        <li><p>Уровень: <span th:text="*{level}"></span></p></li>
+        <li><p>Броня: <span th:text="*{armor.defense}"></span>% поглощение урона</p></li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <h1 th:text="${text}"></h1>
+      <ul th:object="${enemies}">
+        <li><p>Враг: <span th:text="*{name}"></span></p></li>
+        <li><p>Здоровье: <span th:text="*{health}"></span></p></li>
+        <li><p>Урон: <span th:text="*{damage}"></span></p></li>
+      </ul>
+      <form th:action="@{/magical_best_game/attack}" method="post">
+        <button type="submit">Атаковать</button>
+      </form>
+      <form th:action="@{/magical_best_game/use_potion_in_battle}" method="post">
+        <button type="submit">Использовать зелье (50 монет) 50+</button>
+      </form>
+      <form th:action="@{/magical_best_game/magical_best}" method="get">
+        <button type="submit">Сбежать с битвы</button>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

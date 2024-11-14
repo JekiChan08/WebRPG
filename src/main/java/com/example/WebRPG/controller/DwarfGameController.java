@@ -1,210 +1,176 @@
 package com.example.WebRPG.controller;
 
-
-import com.example.WebRPG.Model.Characters.Dwarf.DwarfGroup;
-import com.example.WebRPG.Model.Characters.Dwarf.Fortress;
-import com.example.WebRPG.Model.Characters.Dwarf.Gate;
-import com.example.WebRPG.Service.Impl.dwarfImpl.GameDwarfServiceImpl;
+import com.example.WebRPG.Model.Characters.Person.Boss;
+import com.example.WebRPG.Model.Characters.Person.Enemies;
+import com.example.WebRPG.Model.Characters.Person.MainHero;
+import com.example.WebRPG.Service.ArmorService;
+import com.example.WebRPG.Service.GameService;
 import com.example.WebRPG.Service.MainHeroService;
-import com.example.WebRPG.Service.dwarf.DwarfGroupService;
-import com.example.WebRPG.Service.dwarf.FortressService;
-import com.example.WebRPG.Service.dwarf.GameDwarfService;
-import com.example.WebRPG.Service.dwarf.GateService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Random;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/dwarf_game")
 public class DwarfGameController {
-    @Autowired
+    private final GameService gameService;
     private final MainHeroService ms;
-    @Autowired
-    private final GameDwarfService gameDwarfService;
-    @Autowired
-    private final FortressService fs;
-    @Autowired
-    private final DwarfGroupService dwarfGroupService;
-    @Autowired
-    private final GateService gateService;
+    private final ArmorService as;
+    private final String end = "Поздравляю вас с победой над главным злодеем! Ваши деяния будут прославлены среди гномов как король пивных бочек). ";
 
-    private Random random = new Random();
+    @GetMapping("/dwarf")
+    public String beginning(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
+        model.addAttribute("end", end);
 
-
-    @GetMapping("/set_stats")
-    public String getStats(HttpSession session, Model model) {
-
-        model.addAttribute("new_fortress", new Fortress());
-        return "fortress/new-fortress";
+        if (mainHero.isEndGame()) {
+            return "redirect:/dwarf_game/game_over";
+        }
+        return "dwarf";
     }
 
-    @PostMapping("/set_stats")
-    public String setStats(@ModelAttribute Fortress fortress, HttpSession session, Model model) {
-        Fortress saveFortress = fs.saveFortress(fortress);
-        fs.addNewDwarf(fortress);
-        fs.addNewDwarf(fortress);
-        fs.addGatesToFortress(saveFortress.getId());
+    @GetMapping("/battle")
+    public String getBattle(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
 
-        session.setAttribute("fortress_id", saveFortress.getId());
-        return "redirect:/dwarf_game/preparation";
+        if (session.getAttribute("enemies") == null) {
+            Enemies rnEnemies = gameService.dwarfEnemies(mainHero.getLevel());
+            session.setAttribute("enemies", rnEnemies);
+            model.addAttribute("enemies", rnEnemies);
+        } else {
+            model.addAttribute("enemies", session.getAttribute("enemies"));
+        }
+        model.addAttribute("end", end);
+
+        if (mainHero.getLevel() >= 4) {
+            return "redirect:/dwarf_game/boss_battle";
+        } else if (!mainHero.isEndGame()) {
+            return "battle-dwarf";
+        }
+        return "redirect:/dwarf_game/game_over";
     }
 
-    @GetMapping("/preparation")
-    public String preparation(HttpSession session, Model model) {
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        model.addAttribute("fortress", fortress);
-        model.addAttribute("text", session.getAttribute("text"));
-        return "fortress/preparation";
+    @PostMapping("/attack")
+    public String attack(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        Enemies enemies = (Enemies) session.getAttribute("enemies");
+
+        gameService.attack(mainHero, enemies);
+        ms.saveMainHero(mainHero);
+        if (enemies.getHealth() <= 0) {
+            mainHero.setMoney(mainHero.getMoney() + enemies.getMany());
+            mainHero.setLevel(mainHero.getLevel() + 1);
+            ms.saveMainHero(mainHero);
+
+            Enemies rnEnemies = gameService.dwarfEnemies(mainHero.getLevel());
+            session.setAttribute("enemies", rnEnemies);
+        }
+        model.addAttribute("end", end);
+
+        if (mainHero.isEndGame()) {
+            return "redirect:/dwarf_game/game_over";
+        }
+        return "redirect:/dwarf_game/battle";
     }
 
-    @GetMapping("/dwarfs_stats")
-    public String dwarfsStats(HttpSession session, Model model) {
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        model.addAttribute("fortress", fortress);
+    @PostMapping("/usePotion")
+    public String usePotion(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
 
-        return "fortress/dwarfs-stats";
+        if (gameService.usePotion(mainHero)) {
+            model.addAttribute("text", "Вы использовали зелье");
+        } else {
+            model.addAttribute("text", "Не достаточно денег");
+        }
+        model.addAttribute("end", end);
+
+        if (mainHero.isEndGame()) {
+            return "redirect:/dwarf_game/game_over";
+        }
+        return beginning(session, model);
     }
 
-    @PostMapping("/update_level_dwarf/{id}")
-    public String updateLevelDwarf(@PathVariable("id") String id, HttpSession session, Model model) {
-        DwarfGroup dwarf = dwarfGroupService.findById(id);
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
+    @PostMapping("/use_potion_in_battle")
+    public String usePotionInBattle(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
 
-        session.setAttribute("fortress_id", fortress.getId());
-        model.addAttribute("fortress", fortress);
-        session.setAttribute("text", "Не достаточно опыта");
+        if (gameService.usePotion(mainHero)) {
+            model.addAttribute("text", "Вы использовали зелье");
+        } else {
+            model.addAttribute("text", "Не достаточно денег");
+        }
+        model.addAttribute("end", end);
 
-        if (fortress.getExperience() > 0) {
-            dwarf.levelUp();
-            fortress.setExperience(fortress.getExperience() - 1);
-            dwarfGroupService.saveDwarfGroup(dwarf);
-            session.setAttribute("text", "Успешное улучшение");
+        if (mainHero.isEndGame()) {
+            return "redirect:/dwarf_game/game_over";
+        }
+        return "redirect:/dwarf_game/battle";
+    }
+
+    @GetMapping("/boss_battle")
+    public String battleBoss(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
+
+        if (session.getAttribute("boss") == null) {
+            Boss boss = gameService.rnBoss(mainHero.getLevel());
+            session.setAttribute("boss", boss);
+            model.addAttribute("boss", boss);
+        } else {
+            model.addAttribute("boss", session.getAttribute("boss"));
+        }
+        model.addAttribute("end", end);
+
+        if (!mainHero.isEndGame()) {
+            return "boss-battle-elf";
+        }
+        return "redirect:/dwarf_game/game_over";
+    }
+    @PostMapping("/attack_boss")
+    public String attackBoss(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        Boss boss = (Boss) session.getAttribute("boss");
+
+        gameService.attackBoss(mainHero, boss);
+        ms.saveMainHero(mainHero);
+        session.setAttribute("boss", boss);
+        model.addAttribute("end", end);
+
+        if (boss.getHealth() <= 0) {
+            model.addAttribute("end", end);
+            return "redirect:/dwarf_game/game_over";
         }
 
-        return "redirect:/dwarf_game/preparation";
-    }
-    @GetMapping("/select_dwarf")
-    public String selectDwarf(Model model, HttpSession session) {
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        List<DwarfGroup> dwarfGroups = fortress.getDwarfGroups();
-        model.addAttribute("dwarfGroups", dwarfGroups);
-        model.addAttribute("fortress", fortress);
-        return "fortress/select-dwarf";
-    }
-
-    @PostMapping("/buying_Dwarfs")
-    public String buyingDwarves(HttpSession session, Model model) {
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        session.setAttribute("text", "Не достаточно денег");
-
-        if (fortress.getBalance() > 50) {
-            fortress.setBalance(fortress.getBalance() - 50);
-            fs.addNewDwarf(fortress);
-            model.addAttribute("fortress", fortress);
-            session.setAttribute("text", "Успешное улучшение");
-        }
-        return "redirect:/dwarf_game/preparation";
-    }
-    @PostMapping("/buying_provision")
-    public String buyingProvision(HttpSession session, Model model) {
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        session.setAttribute("text", "Не достаточно опыта");
-        if (fortress.getBalance() > 50) {
-            fortress.setBalance(fortress.getBalance() - 100);
-            fortress.setProvision(fortress.getProvision() + 1);
-            fs.saveFortress(fortress);
-            session.setAttribute("text", "Успешное улучшение");
-        }
-        model.addAttribute("fortress", fortress);
-        return "redirect:/dwarf_game/preparation";
-    }
-
-    @GetMapping("/state_gates")
-    public String stateGates(HttpSession session, Model model) {
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        model.addAttribute("fortress", fortress);
-
-        return "fortress/state-gates";
-    }
-    @GetMapping("/select_gates")
-    public String upgradeGates(HttpSession session, Model model) {
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-        List<Gate> gates = fortress.getGates();
-        model.addAttribute("gates", gates);
-        model.addAttribute("fortress", fortress);
-        return "fortress/select-gates";
-    }
-
-
-    @PostMapping("/upgrade_gates/{id}")
-    public String upgradeGate(@PathVariable("id") String id, HttpSession session, Model model) {
-        Gate gate = gateService.findById(id);
-        String fortressId = (String) session.getAttribute("fortress_id");
-        Fortress fortress = fs.findById(fortressId);
-
-        model.addAttribute("fortress", fortress);
-        session.setAttribute("text", "Не достаточно денег");
-
-        if (fortress.getBalance() >= 100) {
-            gate.setProtection(gate.getProtection() + 20);
-            fortress.setBalance(fortress.getBalance() - 100);
-            gateService.saveGateGroup(gate);
-            session.setAttribute("text", "Успешное улучшение");
-        } else if(gate.getProtection() >= 80) {
-            session.setAttribute("text", "Достигнут лимит");
-
+        if (mainHero.isEndGame()) {
+            return "redirect:/dwarf_game/game_over";
         }
 
-        return "redirect:/dwarf_game/preparation";
+        return "redirect:/dwarf_game/boss_battle";
     }
 
-
-    @GetMapping("/exist")
-    public String exist(HttpSession httpSession, Model model ) {
-        return "set_name_form";
-    }
-
-    @GetMapping("/fortress_defense")
-    public String fortressDefense(HttpSession session, Model model) {
-        return "fortress/select-gate-in-defense";
-    }
-
-
-    @PostMapping("/fortress_defense/{id}")
-    public String fortressDefense(@PathVariable("id") String id, HttpSession session, Model model) {
-
-        return "redirect:/dwarf_game/select_gate_in_defense";
-    }
-
-    @GetMapping("/select_gate_in_defense")
-    public String selectGateInDefense(HttpSession session, Model model) {
-        return "fortress/select-gate-in-defense";
-    }
-
-
-    @GetMapping("/select_dwarfs_defense")
-    public String selectDwarfsDefense(HttpSession session, Model model) {
-        return "fortress/select-dwarfs-defense";
-    }
-
-    @PostMapping("/select_gate_in_defense/{id}")
-    public String selectGateInDefense(@PathVariable("id") String id, HttpSession session, Model model) {
-
-        return "redirect:/dwarf_game/fortress_defense";
+    @GetMapping("/game_over")
+    public String gameOver(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
+        model.addAttribute("boss", session.getAttribute("boss"));
+        model.addAttribute("end", end);
+        return "game-over";
     }
 }
