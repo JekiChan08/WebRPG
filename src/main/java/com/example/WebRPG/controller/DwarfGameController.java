@@ -137,7 +137,7 @@ public class DwarfGameController {
         model.addAttribute("end", end);
 
         if (!mainHero.isEndGame()) {
-            return "boss-battle-elf";
+            return "boss-battle-dwarf";
         }
         return "redirect:/dwarf_game/game_over";
     }
