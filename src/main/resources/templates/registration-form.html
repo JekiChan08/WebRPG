@@ -3,20 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Регистрация</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<div th:if="${param.success}">Вы успешно зарегистрировались</div>
-<form
-    method="post"
-    th:action="@{/registration/save}"
-    th:object="${user}">
-    <input
-    th:field="*{login}"
-    type="text">
-    <input
-    th:field="*{password}"
-    type="password">
-    <button type="submit">Зарегистрировать</button>
-</form>
+<div class="app">
+    <div class="app__bg-pers">
+        <img src="/img/heroes/human.png" alt="">
+        <img src="/img/heroes/dwarf.png" alt="">
+        <img src="/img/heroes/elf.png" alt="">
+        <img src="/img/heroes/beast-mage.png" alt="">
+        <img src="/img/heroes/orc.png" alt="">
+    </div>
+    <div class="app__content">
+        <div>
+            <div th:if="${param.success}">
+                <p>Вы успешно зарегистрировались</p>
+                <a href="/login">Войти</a>
+                <br><br>
+            </div>
+            <form
+                method="post"
+                style="min-width: 300px"
+                th:action="@{/registration/save}"
+                th:object="${user}">
+                <input
+                th:field="*{login}"
+                type="text">
+                <input
+                th:field="*{password}"
+                type="password">
+                <button type="submit">Зарегистрировать</button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

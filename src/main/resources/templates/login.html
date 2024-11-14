@@ -3,15 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Авторизация</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<form method="post" th:action="@{/login}">
-    <label for="username">Логин</label>
-    <input type="text" id="username" name="username">
-    <label for="password">Пароль</label>
-    <input type="password" id="password"
-           name="password">
-    <button type="submit">Войти</button>
-</form>
+<div class="app">
+    <div class="app__bg-pers">
+        <img src="/img/heroes/human.png" alt="">
+            <img src="/img/heroes/dwarf.png" alt="">
+            <img src="/img/heroes/elf.png" alt="">
+            <img src="/img/heroes/beast-mage.png" alt="">
+        <img src="/img/heroes/orc.png" alt="">
+    </div>
+    <div class="app__content">
+        <form method="post" th:action="@{/login}" style="min-width: 300px">
+            <label for="username">Логин</label>
+            <input type="text" id="username" name="username">
+            <label for="password">Пароль</label>
+            <input type="password" id="password"
+                   name="password">
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
