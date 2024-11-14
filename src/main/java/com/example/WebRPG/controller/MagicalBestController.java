@@ -167,6 +167,26 @@ public class MagicalBestController {
         return "redirect:/magical_best_game/boss_battle";
     }
 
+    @PostMapping("/upgrade_weapon")
+    public String upgradeWeapon(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
+
+        model.addAttribute("end", end);
+
+        if (gameService.upgradeWeapon(mainHero)) {
+            model.addAttribute("text", "Вы успешно улучшили оружие");
+        } else {
+            model.addAttribute("text", "Не достаточно денег");
+        }
+
+        if (mainHero.isEndGame()) {
+            return "redirect:/magical_best_game/game_over";
+        }
+        return beginning(session, model);
+    }
+
     @GetMapping("/game_over")
     public String gameOver(HttpSession session, Model model) {
         String heroId = (String) session.getAttribute("hero_id");
@@ -175,5 +195,51 @@ public class MagicalBestController {
         model.addAttribute("boss", session.getAttribute("boss"));
         model.addAttribute("end", end);
         return "game-over";
+    }
+
+
+    @PostMapping("/upgradeArmor")
+    public String upgradeArmor(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+
+        model.addAttribute("end", end);
+
+        if (mainHero.getMoney() >= 100) {
+            model.addAttribute("text", "Вы улучшили броню!");
+            mainHero.setMoney(mainHero.getMoney() - 100);
+            ms.saveMainHero(mainHero);
+            as.upgradeDefense(mainHero.getArmor().getId(), 5);
+
+        } else {
+            model.addAttribute("text", "Не достаточно денег");
+        }
+        model.addAttribute("main_hero", mainHero);
+
+        if (mainHero.isEndGame()) {
+            return "redirect:/magical_best_game/game_over";
+        }
+        return beginning(session, model);
+    }
+
+
+    @PostMapping("/use_potion_in_boss_battle")
+    public String usePotionInBossBattle(HttpSession session, Model model) {
+        String heroId = (String) session.getAttribute("hero_id");
+        MainHero mainHero = ms.findById(heroId);
+        model.addAttribute("main_hero", mainHero);
+
+        model.addAttribute("end", end);
+
+        if (gameService.usePotion(mainHero)) {
+            model.addAttribute("text", "Вы использовали зелье");
+        } else {
+            model.addAttribute("text", "Не достаточно денег");
+        }
+
+        if (mainHero.isEndGame()) {
+            return "redirect:/magical_best_game/game_over";
+        }
+        return "redirect:/magical_best_game/boss_battle";
     }
 }
